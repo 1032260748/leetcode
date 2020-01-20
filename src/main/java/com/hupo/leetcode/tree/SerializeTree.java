@@ -2,131 +2,82 @@ package com.hupo.leetcode.tree;
 
 import com.hupo.leetcode.TreeNode;
 
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Stack;
 
 public class SerializeTree {
 
-    // Encodes a tree to a single string.
     public String serialize(TreeNode root) {
         if (root == null) {
-            return "{}";
+            return "";
         }
-        return "{" + root.val + serialize(root.left) + serialize(root.right) + "}";
+
+        return root.val + "," + serialize(root.left) + "," + serialize(root.right);
     }
 
-
-    // Decodes your encoded data to tree.
     public TreeNode deserialize(String data) {
-        if (data.length() <= 2) {
-            return null;
-        }
-
-        String subString = data.substring(1, data.length() - 1);
-
-        int index = subString.indexOf("{");
-
-        int lastIndex = index + 1;
-
-        Stack<String> stack = new Stack<>();
-
-        stack.push("{");
-
-        for (int i = index + 1; i < subString.length() - 1; i++) {
-
-            if (subString.charAt(i) == '{') {
-                stack.push("{");
-            }
-            if (subString.charAt(i) == '}') {
-                stack.pop();
-            }
-
-            if (stack.isEmpty()) {
-                lastIndex = i;
-                break;
-            }
-        }
-
-        TreeNode treeNode = new TreeNode(Integer.parseInt(subString.substring(0, index)));
-
-
-        String leftNode = subString.substring(index, lastIndex + 1);
-        String rightNode = subString.substring(lastIndex + 1);
-
-        treeNode.left = deserialize(leftNode);
-        treeNode.right = deserialize(rightNode);
-
-        return treeNode;
+        TempNode tempNode = deserialize(data, 0);
+        return tempNode.node;
     }
 
+    public static void main(String[] args) {
+        TreeNode treeNode = new TreeNode(1);
+        treeNode.left = new TreeNode(2);
+        treeNode.right = new TreeNode(3);
+        treeNode.left.left = new TreeNode(2);
+        treeNode.right.right = new TreeNode(3);
+        SerializeTree serializeTree = new SerializeTree();
+        String txt = serializeTree.serialize(treeNode);
 
-    public static TreeNode stringToTreeNode(String input) {
-        input = input.trim();
-        input = input.substring(1, input.length() - 1);
-        if (input.length() == 0) {
-            return null;
-        }
+        TreeNode newNode = serializeTree.deserialize(txt);
 
-        String[] parts = input.split(",");
-        String item = parts[0];
-        TreeNode root = new TreeNode(Integer.parseInt(item));
-        Queue<TreeNode> nodeQueue = new LinkedList<>();
-        nodeQueue.add(root);
-
-        int index = 1;
-        while (!nodeQueue.isEmpty()) {
-            TreeNode node = nodeQueue.remove();
-
-            if (index == parts.length) {
-                break;
-            }
-
-            item = parts[index++];
-            item = item.trim();
-            if (!item.equals("null")) {
-                int leftNumber = Integer.parseInt(item);
-                node.left = new TreeNode(leftNumber);
-                nodeQueue.add(node.left);
-            }
-
-            if (index == parts.length) {
-                break;
-            }
-
-            item = parts[index++];
-            item = item.trim();
-            if (!item.equals("null")) {
-                int rightNumber = Integer.parseInt(item);
-                node.right = new TreeNode(rightNumber);
-                nodeQueue.add(node.right);
-            }
-        }
-        return root;
+        String newTxt = serializeTree.serialize(newNode);
+        System.out.println(txt.equals(newTxt));
     }
 
-    public static String treeNodeToString(TreeNode root) {
-        if (root == null) {
-            return "[]";
-        }
+    public TempNode deserialize(String data, int index) {
+        if (index < data.length() - 1) {
 
-        String output = "";
-        Queue<TreeNode> nodeQueue = new LinkedList<>();
-        nodeQueue.add(root);
-        while (!nodeQueue.isEmpty()) {
-            TreeNode node = nodeQueue.remove();
+            String str = "";
 
-            if (node == null) {
-                output += "null, ";
-                continue;
+            int leftStart = index;
+            for (int i = index; i <= data.length(); i++) {
+                if (data.charAt(i) == ',') {
+                    leftStart = i + 1;
+                    break;
+                } else {
+                    str = str + data.charAt(i);
+                }
             }
 
-            output += String.valueOf(node.val) + ", ";
-            nodeQueue.add(node.left);
-            nodeQueue.add(node.right);
+            TempNode tempNode = new TempNode();
+
+            if (str.length() == 0) {
+                tempNode.index = leftStart;
+                return tempNode;
+            }
+            TreeNode treeNode = new TreeNode(Integer.valueOf(str));
+            tempNode.node = treeNode;
+
+            TempNode leftTemp = deserialize(data, leftStart);
+
+            TempNode rightTemp = deserialize(data, leftTemp.index);
+
+            tempNode.index = rightTemp.index;
+
+            treeNode.left = leftTemp.node;
+            treeNode.right = rightTemp.node;
+
+            return tempNode;
+        } else {
+            TempNode tempNode = new TempNode();
+            tempNode.index = data.length();
+            return tempNode;
         }
-        return "[" + output.substring(0, output.length() - 2) + "]";
+
     }
 
+    public static class TempNode {
+        public int index;
+        public TreeNode node;
+    }
 
 }
