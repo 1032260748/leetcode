@@ -1,11 +1,50 @@
 package com.hupo.leetcode.tree;
 
 import com.hupo.leetcode.TreeNode;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SumTree {
+
+
+    public boolean isBalanced(TreeNode root) {
+        BalanceResult result = recurBalance(root);
+        return result.isBalance;
+    }
+
+    public BalanceResult recurBalance(TreeNode root) {
+
+        if (root == null) {
+            return new BalanceResult(true, 0);
+        }
+
+        BalanceResult leftResult = recurBalance(root.left);
+        BalanceResult rightResult = recurBalance(root.right);
+
+        int height = Math.max(leftResult.height, rightResult.height) + 1;
+
+        if (!leftResult.isBalance || !rightResult.isBalance) {
+            return new BalanceResult(false, height);
+        } else {
+            return new BalanceResult(Math.abs(leftResult.height - rightResult.height) <= 1, height);
+        }
+    }
+
+    public static class BalanceResult {
+        public boolean isBalance;
+        public int height;
+
+        public BalanceResult() {
+
+        }
+
+        public BalanceResult(boolean isBalance, int height) {
+            this.isBalance = isBalance;
+            this.height = height;
+        }
+    }
 
 
     public int sumNumbers(TreeNode root) {

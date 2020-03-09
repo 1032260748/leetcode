@@ -4,6 +4,7 @@ import com.hupo.leetcode.TreeNode;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public class TreePathSum {
     public List<List<Integer>> pathSum(TreeNode root, int sum) {
@@ -80,6 +81,83 @@ public class TreePathSum {
 
         System.out.println(result);
 
+    }
+
+    public List<TreeNode> generateTrees(int n) {
+        if (n == 0) {
+            return new ArrayList<>();
+        }
+        return generateTrees(1, n);
+    }
+
+    public List<TreeNode> generateTrees(int start, int end) {
+        List<TreeNode> arrayList = new ArrayList<>();
+        if (start > end) {
+            arrayList.add(null);
+            return arrayList;
+        }
+        if (start == end) {
+            arrayList.add(new TreeNode(start));
+            return arrayList;
+        }
+
+
+        for (int i = start; i <= end; i++) {
+            List<TreeNode> left = generateTrees(start, i - 1);
+            List<TreeNode> right = generateTrees(i + 1, end);
+            for (int m = 0; m <= left.size() - 1; m++) {
+                for (int n = 0; n <= right.size() - 1; n++) {
+                    TreeNode treeNode = new TreeNode(i);
+                    treeNode.left = left.get(m);
+                    treeNode.right = right.get(n);
+                    arrayList.add(treeNode);
+                }
+            }
+        }
+        return arrayList;
+    }
+
+    public boolean isValid(String s) {
+        if (s == null || s.length() <= 0) {
+            return true;
+        }
+
+        Stack<Character> stack = new Stack<>();
+        char[] chars = s.toCharArray();
+        stack.push(chars[0]);
+
+        for (int i = 1; i <= chars.length - 1; i++) {
+            if (chars[i] == '(' || chars[i] == '{' || chars[i] == '[') {
+                stack.push(chars[i]);
+            } else if (chars[i] == ')' || chars[i] == '}' || chars[i] == ']') {
+
+                if (stack.isEmpty()) {
+                    return false;
+                }
+
+                char top = stack.pop();
+                if (top != getPair(chars[i])) {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+
+        return stack.isEmpty();
+    }
+
+    private char getPair(char temp) {
+        switch (temp) {
+            case ')':
+                return '(';
+            case '}':
+                return '{';
+            case ']':
+                return '[';
+            default:
+                throw new IllegalArgumentException();
+        }
     }
 
 
