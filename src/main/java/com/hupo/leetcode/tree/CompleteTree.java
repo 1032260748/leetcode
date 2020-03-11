@@ -10,6 +10,35 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class CompleteTree {
 
+
+    public static class TempResult {
+        public int height;
+        public int length;
+    }
+
+
+    public int diameterOfBinaryTree(TreeNode root) {
+        TempResult tempResult = diameterOfBinaryTreeInner(root);
+        return tempResult.length;
+    }
+
+    public TempResult diameterOfBinaryTreeInner(TreeNode root) {
+
+        if (root == null) {
+            return new TempResult();
+        }
+
+        TempResult leftResult = diameterOfBinaryTreeInner(root.left);
+        TempResult rightResult = diameterOfBinaryTreeInner(root.right);
+
+        TempResult current = new TempResult();
+        current.height = Math.max(leftResult.height, rightResult.height) + 1;
+
+
+        current.length = Math.max(Math.max(leftResult.length, rightResult.length), leftResult.height + rightResult.height);
+        return current;
+    }
+
     public int countNodes(TreeNode root) {
         if (root == null) {
             return 0;
