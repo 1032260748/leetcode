@@ -2,11 +2,43 @@ package com.hupo.leetcode.coin;
 
 
 public class CoinChange {
+    public static class Test {
+        static {
+            int i = 0;
+            i++;
+            System.out.println(i);
+        }
+    }
+
+    public static class Derived extends Base {
+        public Derived(String s) {
+            //super();
+            super(s);
+            System.out.println("这是子类的构造方法");
+        }
+
+        public static void main(String[] args) {
+            new Derived("C");
+        }
+    }
+
+    public static class Base {
+//        public Base() {
+//            System.out.println("这是父类的构造方法");
+//        }
+
+        public Base(String s) {
+            System.out.println("这是子类的构造方法");
+        }
+
+    }
 
     public static void main(String[] args) {
         CoinChange coinChange = new CoinChange();
         int[] coins = new int[]{1};
-        System.out.println(coinChange.coinChange(coins, 1));
+
+        System.out.println(new Test());
+        //System.out.println(coinChange.coinChange(coins, 1));
     }
 
     public int coinChange(int[] coins, int amount) {
