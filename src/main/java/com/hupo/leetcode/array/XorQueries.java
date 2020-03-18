@@ -2,6 +2,10 @@ package com.hupo.leetcode.array;
 
 public class XorQueries {
 
+    public static void main(String[] args) {
+        System.out.println(-10 >>> 1);
+    }
+
     public int[] xorQueries(int[] arr, int[][] queries) {
         int[] xorArray = new int[arr.length];
         xorArray[0] = arr[0];
