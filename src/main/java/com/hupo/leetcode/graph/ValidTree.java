@@ -1,6 +1,7 @@
 package com.hupo.leetcode.graph;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class ValidTree {
 
@@ -13,6 +14,10 @@ public class ValidTree {
 
         boolean valid = (new ValidTree()).validTree(5, edges);
         System.out.println(valid);
+
+        List<String> list=new ArrayList<>();
+
+        ConcurrentLinkedQueue  queue=new ConcurrentLinkedQueue();
     }
 
 
