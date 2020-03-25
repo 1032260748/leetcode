@@ -1,6 +1,7 @@
 package com.hupo.leetcode.array;
 
 
+import java.util.PriorityQueue;
 import java.util.concurrent.Semaphore;
 
 public class StoneGame {
@@ -10,6 +11,12 @@ public class StoneGame {
         StoneGame stoneGame = new StoneGame();
         boolean result = stoneGame.stoneGame(piles);
         System.out.println(result);
+
+        PriorityQueue<Integer> queue = new PriorityQueue();
+        queue.offer(3);
+        queue.offer(3);
+        queue.offer(3);
+        System.out.println(queue.size());
     }
 
     public boolean stoneGame(int[] piles) {
