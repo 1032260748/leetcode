@@ -13,11 +13,17 @@ public class Main {
             String line2 = scanner.nextLine();
 
         }
+
         scanner.close();
     }
 
     private int result(int m, int n) {
-        return null;
+
+        ThreadLocal<String>local=new ThreadLocal<String>();
+        local.set(null);
+
+        local=null;
+        return 0;
     }
 
     public static boolean boolIsAllCharExist(String shortStr, String longStr) {
