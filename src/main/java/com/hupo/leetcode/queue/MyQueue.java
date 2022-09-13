@@ -32,10 +32,7 @@ public class MyQueue {
         while (!stackA.isEmpty()) {
             stackB.push(stackA.pop());
         }
-        if (!stackB.isEmpty()) {
-            return stackB.pop();
-        }
-        return -1;
+        return stackB.pop();
     }
 
     /**
