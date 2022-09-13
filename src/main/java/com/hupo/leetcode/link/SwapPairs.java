@@ -1,51 +1,16 @@
 package com.hupo.leetcode.link;
 
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 public class SwapPairs {
     public static void main(String[] args) {
         SwapPairs swapPairs = new SwapPairs();
-        int[] nums = new int[]{3, 4};
-        swapPairs.swapNumbers(nums);
-        System.out.println(nums);
-
-        ExecutorService pool = Executors.newFixedThreadPool(2);
-
-        pool.submit(new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        });
-    }
-
-
-    public ListNode swapPairsTwo(ListNode head) {
-        if (head == null || head.next == null) {
-            return head;
-        }
-
-        ListNode next = head.next.next;
-        head.next.next = null;
-
-        ListNode newHead = head.next;
-        head.next = null;
-        newHead.next = head;
-        head.next = swapPairs(next);
-
-        return newHead;
-    }
-
-    public int[] swapNumbers(int[] numbers) {
-        if (numbers == null || numbers.length < 2) {
-            return numbers;
-        }
-        numbers[0] = numbers[0] ^ numbers[1];
-        numbers[1] = numbers[0] ^ numbers[1];
-        numbers[0] = numbers[0] ^ numbers[1];
-        return numbers;
+        ListNode head = new ListNode(1);
+        head.next = new ListNode(2);
+        head.next.next = new ListNode(3);
+        head.next.next.next = new ListNode(4);
+        head.next.next.next.next = new ListNode(5);
+        ListNode listNode = swapPairs.reverseBetween(head, 2, 3);
+        System.out.println(listNode);
     }
 
     public ListNode swapPairs(ListNode head) {
