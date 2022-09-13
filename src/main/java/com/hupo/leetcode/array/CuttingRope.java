@@ -1,19 +1,44 @@
 package com.hupo.leetcode.array;
 
-
 import java.util.*;
 
 
 public class CuttingRope {
 
-
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-
 
         String shortStr = sc.nextLine();
         String longStr = sc.nextLine();
         System.out.println(longStr.contains(shortStr));
+    }
+
+    public int longestValidParentheses(String s) {
+
+        int left = 0;
+        int right = 0;
+        int index = 0;
+
+        int result = 0;
+        while (index <= s.length() - 1) {
+
+            if (s.charAt(index) == '(') {
+                left++;
+            } else if (s.charAt(index) == ')') {
+                if (right < left) {
+                    right++;
+                } else if (right == left) {
+                    result = Math.max(left * 2, result);
+                    left = 0;
+                    right = 0;
+                }
+            }
+            index++;
+        }
+
+        result = Math.max(result, Math.min(left, right) * 2);
+        return result;
+
     }
 
     public static String convertDouble(double num) {
@@ -26,7 +51,6 @@ public class CuttingRope {
     private static String convert(long w) {
 
         String result = "";
-
 
         if (w > 1000) {
             long qian = w / 1000;
@@ -47,9 +71,6 @@ public class CuttingRope {
         return null;
 
     }
-
-
-
 
     public static String converse(String str) {
         String[] tempList = str.split(" ");
@@ -79,6 +100,5 @@ public class CuttingRope {
         }
         return set.size();
     }
-
 
 }
