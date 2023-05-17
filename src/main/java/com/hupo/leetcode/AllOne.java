@@ -3,7 +3,36 @@ package com.hupo.leetcode;
 import java.util.HashMap;
 import java.util.Map;
 
+
 public class AllOne {
+
+    public int longestDecomposition(String s) {
+        if (s.isEmpty())
+        {
+            return 0;
+        }
+        for (int i = 1, n = s.length(); i <= n / 2; ++i) // 枚举前后缀长度
+            if (s.substring(0, i).equals(s.substring(n - i))) // 立刻分割
+                return 2 + longestDecomposition(s.substring(i, n - i));
+        return 1; // 无法分割
+    }
+
+    public TreeNode searchBST(TreeNode root, int val) {
+        if (root == null) {
+            return null;
+        }
+        TreeNode current = root;
+        while (current != null) {
+            if (current.val == val) {
+                return current;
+            } else if (current.val > val) {
+                current = current.left;
+            } else {
+                current = current.right;
+            }
+        }
+        return null;
+    }
 
     Map<String, LinkNode> map;
 
@@ -44,7 +73,6 @@ public class AllOne {
         }
     }
 
-
     public void upShift(LinkNode node) {
         if (node.pre == null) {
             head = node;
@@ -75,7 +103,6 @@ public class AllOne {
         upShift(node);
     }
 
-
     public void downShift(LinkNode node) {
         if (node.next == null) {
             tail = node;
@@ -105,7 +132,6 @@ public class AllOne {
 
         downShift(node);
     }
-
 
     /**
      * Decrements an existing key by 1. If Key's value is 1, remove it from the data structure.
@@ -173,7 +199,6 @@ public class AllOne {
             return "";
         }
     }
-
 
     public static class LinkNode {
         public String key;
