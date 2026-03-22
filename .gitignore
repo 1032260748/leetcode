@@ -14,6 +14,7 @@ local.properties
 
 # General build files
 **/build/*
+.idea
 
 lib/dokka.jar
 lib/quasar.jar

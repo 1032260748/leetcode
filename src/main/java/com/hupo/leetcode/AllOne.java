@@ -1,14 +1,226 @@
 package com.hupo.leetcode;
 
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
+import java.util.Stack;
+import java.util.TreeSet;
 
 
 public class AllOne {
 
+    public static void main(String[] args) {
+        AllOne allOne = new AllOne();
+        String result = allOne.removeDuplicateLetters("bcabc");
+        System.out.println(result);
+    }
+
+    public String removeDuplicateLetters(String s) {
+        Map<Character, TreeSet<Integer>> map = new HashMap<>();
+        for (int i = 0; i <= s.length() - 1; i++) {
+            Character c = s.charAt(i);
+            map.putIfAbsent(c, new TreeSet<>());
+            map.get(c).add(i);
+        }
+        Stack<Character> stack = new Stack<>();
+        Set<Character> inStack = new HashSet<>();
+        for (int i = 0; i <= s.length() - 1; i++) {
+            Character c = s.charAt(i);
+            if (inStack.contains(c)) {
+                continue;
+            }
+            if (stack.isEmpty()) {
+                stack.push(c);
+                inStack.add(c);
+                continue;
+            }
+            if (stack.peek() < c) {
+                stack.push(c);
+                inStack.add(c);
+                continue;
+            }
+            while (!stack.isEmpty() && stack.peek() > c) {
+                if (i < map.get(stack.peek()).last()) {
+                    inStack.remove(stack.peek());
+                    stack.pop();
+                } else {
+                    break;
+                }
+            }
+            stack.push(c);
+            inStack.add(c);
+        }
+
+        StringBuilder result = new StringBuilder();
+        while (!stack.isEmpty()) {
+            result.insert(0, stack.pop());
+        }
+        return result.toString();
+    }
+
+
+    public ListNode sortList(ListNode head) {
+        if (head == null) {
+            return head;
+        }
+
+        int size = length(head);
+        if (size <= 1) {
+            return head;
+        }
+
+        int current = 1;
+        ListNode middle = head;
+        while (current < size / 2 && middle.next != null) {
+            middle = middle.next;
+            current++;
+        }
+
+        ListNode second = middle.next;
+        middle.next = null;
+
+        ListNode firstSort = sortList(head);
+        ListNode secondSort = sortList(second);
+
+        return merge(firstSort, secondSort);
+    }
+
+    private ListNode merge(ListNode firstSort, ListNode secondSort) {
+        if (firstSort == null) {
+            return secondSort;
+        }
+        if (secondSort == null) {
+            return firstSort;
+        }
+
+        ListNode firstCurrent = firstSort;
+        ListNode secondCurrent = secondSort;
+
+        ListNode current;
+        ListNode newHead;
+
+        if (firstCurrent.val <= secondCurrent.val) {
+            current = firstCurrent;
+            firstCurrent = firstCurrent.next;
+        } else {
+            current = secondCurrent;
+            secondCurrent = secondCurrent.next;
+        }
+        current.next = null;
+        newHead = current;
+
+        while (firstCurrent != null && secondCurrent != null) {
+            if (firstCurrent.val <= secondCurrent.val) {
+                current.next = firstCurrent;
+                firstCurrent = firstCurrent.next;
+            } else {
+                current.next = secondCurrent;
+                secondCurrent = secondCurrent.next;
+            }
+            current = current.next;
+            current.next = null;
+        }
+
+        if (secondCurrent != null) {
+            current.next = secondCurrent;
+        }
+
+        if (firstCurrent != null) {
+            current.next = firstCurrent;
+        }
+        return newHead;
+    }
+
+    private int length(ListNode head) {
+        if (head == null) {
+            return 0;
+        }
+        if (head.next == null) {
+            return 1;
+        }
+        int size = 0;
+        ListNode current = head;
+        while (current != null) {
+            size = size + 1;
+            current = current.next;
+        }
+        return size;
+    }
+
+    static class Node {
+        public int val;
+        public List<Node> children;
+
+        public Node() {
+        }
+
+        public Node(int _val) {
+            val = _val;
+        }
+
+        public Node(int _val, List<Node> _children) {
+            val = _val;
+            children = _children;
+        }
+    }
+
+    public List<List<Integer>> levelOrder(Node root) {
+        if (root == null) {
+            return new ArrayList<>();
+        }
+        List<List<Integer>> result = new ArrayList<>();
+        Queue<Node> queue = new LinkedList<>();
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            List<Integer> level = new ArrayList<>();
+            for (int i = 1; i <= size; i++) {
+                Node current = queue.poll();
+                level.add(current.val);
+
+                if (current.children != null && !current.children.isEmpty()) {
+                    for (Node child : current.children) {
+                        queue.offer(child);
+                    }
+                }
+            }
+            result.add(level);
+        }
+        return result;
+    }
+
+    public int maxIncreaseKeepingSkyline(int[][] grid) {
+        int[] row = new int[grid.length];
+        int[] col = new int[grid[0].length];
+        Arrays.fill(row, Integer.MIN_VALUE);
+        Arrays.fill(col, Integer.MIN_VALUE);
+
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                row[i] = Math.max(row[i], grid[i][j]);
+                col[j] = Math.max(col[j], grid[i][j]);
+            }
+        }
+
+        int sum = 0;
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                sum = sum + Math.min(row[i], col[j]) - grid[i][j];
+            }
+        }
+
+        return sum;
+    }
+
     public int longestDecomposition(String s) {
-        if (s.isEmpty())
-        {
+        if (s.isEmpty()) {
             return 0;
         }
         for (int i = 1, n = s.length(); i <= n / 2; ++i) // 枚举前后缀长度
